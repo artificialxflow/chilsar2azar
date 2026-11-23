@@ -1,0 +1,6 @@
+{
+  "name": "چیلسر یکپارچه",
+  "description": "سامانه جامع مدیریت تولید، برشته‌کاری، انبار، فروش، مشتریان و امور مالی برند قهوه چیلسر",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

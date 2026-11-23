@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 60" fill="none" role="img" aria-label="لوگوی برند چیلسر">
+  <!-- Geometric Coffee Bean & Production Flow Mark -->
+  <g transform="translate(124, 6)">
+    <rect x="0" y="0" width="48" height="48" rx="15" fill="#4B2E24" />
+    <!-- Outer Bean Silhouette -->
+    <path d="M24 9C16.2 9 11 15.6 11 24C11 32.4 16.2 39 24 39C31.8 39 37 32.4 37 24C37 15.6 31.8 9 24 9Z" fill="#FFFEFC" fill-opacity="0.14" stroke="#FFFEFC" stroke-width="2.2" />
+    <!-- Continuous S-Curve Flow (Roasting & Operations Flow) -->
+    <path d="M26.5 10.5C21.2 15.2 21.4 20.6 24.4 24.4C27.4 28.2 27.6 33.4 21.8 37.8" stroke="#C47A3C" stroke-width="3.2" stroke-linecap="round" />
+    <!-- Subtle Directional Flow Accent -->
+    <circle cx="30.5" cy="15.5" r="2" fill="#C47A3C" />
+  </g>
+  <!-- Persian Wordmark -->
+  <text x="112" y="34" text-anchor="end" fill="#4B2E24" font-family="CustomPersianFont, system-ui, sans-serif" font-size="24" font-weight="700">چیلسر</text>
+  <text x="112" y="50" text-anchor="end" fill="#786D65" font-family="CustomPersianFont, system-ui, sans-serif" font-size="10.5" font-weight="500">مدیریت یکپارچه قهوه</text>
+</svg>

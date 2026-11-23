@@ -1,0 +1,236 @@
+// Prisma Schema Reference for Chilser Integrated ERP (چیلسر یکپارچه)
+// All TypeScript interfaces in lib/mockData.ts and form/table fields match these exact camelCase names.
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  fullName     String
+  mobile       String   @unique
+  email        String?
+  role         String   // ADMIN | SALES | ROASTER | WAREHOUSE | ACCOUNTANT
+  department   String
+  isActive     Boolean  @default(true)
+  permissions  String[]
+  avatarUrl    String?
+  lastLoginAt  DateTime?
+  createdAt    DateTime @default(now())
+}
+
+model OtpCode {
+  id        String   @id @default(cuid())
+  mobile    String
+  code      String
+  expiresAt DateTime
+  consumed  Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Customer {
+  id           String   @id @default(cuid())
+  customerCode String   @unique
+  fullName     String
+  companyName  String
+  segment      String   // CAFE | WHOLESALE | CORPORATE | RETAIL
+  mobile       String
+  city         String
+  address      String
+  creditLimit  Int      @default(0)
+  totalSpent   Int      @default(0)
+  ordersCount  Int      @default(0)
+  status       String   // ACTIVE | VIP | INACTIVE
+  notes        String?
+  lastOrderAt  DateTime?
+  createdAt    DateTime @default(now())
+}
+
+model Lead {
+  id             String   @id @default(cuid())
+  leadCode       String   @unique
+  contactName    String
+  businessName   String
+  mobile         String
+  city           String
+  source         String   // EXHIBITION | INSTAGRAM | REFERRAL | WEBSITE | COLD_CALL
+  stage          String   // NEW | CONTACTED | SAMPLE_SENT | NEGOTIATION | CONVERTED | LOST
+  estimatedValue Int      @default(0)
+  sampleProduct  String?
+  assignedTo     String
+  notes          String?
+  createdAt      DateTime @default(now())
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  orderNumber     String      @unique
+  customerId      String
+  customerName    String
+  orderDate       DateTime
+  status          String      // PENDING | PREPARING | SHIPPED | DELIVERED | CANCELLED
+  paymentStatus   String      // UNPAID | PARTIAL | PAID
+  subtotalAmount  Int
+  discountAmount  Int         @default(0)
+  totalAmount     Int
+  notes           String?
+  items           OrderItem[]
+  createdAt       DateTime    @default(now())
+}
+
+model OrderItem {
+  id           String @id @default(cuid())
+  orderId      String
+  order        Order  @relation(fields: [orderId], references: [id])
+  skuCode      String
+  productName  String
+  grindType    String // WHOLE_BEAN | ESPRESSO | FRENCH_PRESS | TURKISH | POUR_OVER
+  packWeightGr Int
+  quantity     Int
+  unitPrice    Int
+  lineTotal    Int
+}
+
+model RoastBatch {
+  id               String   @id @default(cuid())
+  batchNumber      String   @unique
+  greenBeanItemId  String
+  greenBeanName    String
+  targetProductId  String
+  targetProductName String
+  roastProfile     String   // LIGHT | MEDIUM | MEDIUM_DARK | DARK
+  roasterMachine   String
+  operatorName     String
+  inputGreenKg     Float
+  outputRoastedKg  Float
+  weightLossPct    Float
+  roastTempC       Int
+  roastDurationMin Int
+  packagedUnits    Int      @default(0)
+  packSizeGr       Int      @default(1000)
+  status           String   // PLANNED | ROASTING | PACKAGING | COMPLETED
+  scheduledDate    DateTime
+  completedAt      DateTime?
+  qualityNotes     String?
+}
+
+model InventoryItem {
+  id            String   @id @default(cuid())
+  skuCode       String   @unique
+  itemName      String
+  category      String   // GREEN_BEAN | ROASTED_COFFEE | PACKAGING
+  origin        String?
+  unit          String   // KG | PACK | PIECE
+  currentStock  Float
+  minStockLevel Float
+  unitCost      Int
+  warehouseZone String
+  imageUrl      String?
+  updatedAt     DateTime @updatedAt
+}
+
+model StockMovement {
+  id            String   @id @default(cuid())
+  movementCode  String   @unique
+  itemId        String
+  itemName      String
+  movementType  String   // IN | OUT | ADJUSTMENT
+  quantity      Float
+  unit          String
+  referenceCode String
+  reason        String
+  operatorName  String
+  createdAt     DateTime @default(now())
+}
+
+model Supplier {
+  id           String   @id @default(cuid())
+  supplierCode String   @unique
+  supplierName String
+  contactName  String
+  mobile       String
+  category     String   // GREEN_BEAN | PACKAGING | EQUIPMENT
+  originRegion String
+  rating       Float    @default(4.5)
+  isActive     Boolean  @default(true)
+}
+
+model PurchaseOrder {
+  id            String   @id @default(cuid())
+  poNumber      String   @unique
+  supplierId    String
+  supplierName  String
+  itemId        String
+  itemName      String
+  lotNumber     String
+  quantity      Float
+  unit          String
+  unitCost      Int
+  totalCost     Int
+  status        String   // ORDERED | IN_TRANSIT | RECEIVED | CANCELLED
+  orderDate     DateTime
+  receivedDate  DateTime?
+}
+
+model Shipment {
+  id               String   @id @default(cuid())
+  shipmentCode     String   @unique
+  orderId          String
+  orderNumber      String
+  customerName     String
+  destinationCity  String
+  carrierName      String   // CHILSER_COURIER | TIPAX | BARBARI | EXPRESS_POST
+  trackingCode     String
+  status           String   // READY | DISPATCHED | IN_TRANSIT | DELIVERED
+  dispatchedAt     DateTime?
+  deliveredAt      DateTime?
+  deliveryHours    Float?
+  shippingCost     Int      @default(0)
+}
+
+model FinancialTransaction {
+  id              String   @id @default(cuid())
+  transactionCode String   @unique
+  type            String   // RECEIPT | PAYMENT | EXPENSE
+  category        String
+  title           String
+  counterparty    String
+  amount          Int
+  paymentMethod   String   // BANK_TRANSFER | POS | CHEQUE | CASH
+  status          String   // SETTLED | PENDING | OVERDUE
+  referenceCode   String?
+  transactionDate DateTime
+}
+
+model SurveyResponse {
+  id              String   @id @default(cuid())
+  surveyCode      String   @unique
+  customerName    String
+  orderNumber     String
+  overallScore    Int      // 1 to 5
+  roastQuality    Int      // 1 to 5
+  aromaFreshness  Int      // 1 to 5
+  deliverySpeed   Int      // 1 to 5
+  npsScore        Int      // 0 to 10
+  comment         String
+  followUpStatus  String   // NEW | REVIEWED | RESOLVED
+  submittedAt     DateTime @default(now())
+}
+
+model SystemSetting {
+  id                       String @id @default("default")
+  companyName              String
+  brandSubtitle            String
+  roasteryBranch           String
+  phone                    String
+  address                  String
+  taxRatePercent           Float
+  maxAllowedWeightLossPct  Float
+  lowStockAlertMultiplier  Float
+  currencyLabel            String
+}
